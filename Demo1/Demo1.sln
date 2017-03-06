@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "Demo1", "Demo1\Demo1.sfproj", "{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stateless1", "Stateless1\Stateless1.csproj", "{7E7500B7-3C2C-47C4-9ACC-2E23C94BF31C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Debug|x64.ActiveCfg = Debug|x64
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Debug|x64.Build.0 = Debug|x64
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Debug|x64.Deploy.0 = Debug|x64
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Release|x64.ActiveCfg = Release|x64
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Release|x64.Build.0 = Release|x64
+		{BED6C68D-E990-4FCE-B8EC-30CABE58FDF2}.Release|x64.Deploy.0 = Release|x64
+		{7E7500B7-3C2C-47C4-9ACC-2E23C94BF31C}.Debug|x64.ActiveCfg = Debug|x64
+		{7E7500B7-3C2C-47C4-9ACC-2E23C94BF31C}.Debug|x64.Build.0 = Debug|x64
+		{7E7500B7-3C2C-47C4-9ACC-2E23C94BF31C}.Release|x64.ActiveCfg = Release|x64
+		{7E7500B7-3C2C-47C4-9ACC-2E23C94BF31C}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
