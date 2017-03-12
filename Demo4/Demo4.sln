@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserActor", "UserActor\User
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserActor.Interfaces", "UserActor.Interfaces\UserActor.Interfaces.csproj", "{144E1584-F56A-4823-B9E3-486CDC3256E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,12 @@ Global
 		{144E1584-F56A-4823-B9E3-486CDC3256E9}.Release|Any CPU.ActiveCfg = Release|x64
 		{144E1584-F56A-4823-B9E3-486CDC3256E9}.Release|x64.ActiveCfg = Release|x64
 		{144E1584-F56A-4823-B9E3-486CDC3256E9}.Release|x64.Build.0 = Release|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Debug|x64.ActiveCfg = Debug|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Debug|x64.Build.0 = Debug|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Release|Any CPU.ActiveCfg = Release|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Release|x64.ActiveCfg = Release|x64
+		{EED3C2BE-2DCE-416B-BCE5-373B0D9A8290}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

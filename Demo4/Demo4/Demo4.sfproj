@@ -29,6 +29,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EmailService\EmailService.csproj" />
     <ProjectReference Include="..\UserActor\UserActor.csproj" />
     <ProjectReference Include="..\Website\Website.csproj" />
   </ItemGroup>
