@@ -5,5 +5,6 @@
     <Parameter Name="EmailService_MinReplicaSetSize" Value="3" />
     <Parameter Name="EmailService_TargetReplicaSetSize" Value="3" />
     <Parameter Name="Website_InstanceCount" Value="-1" />
+    <Parameter Name="environment" Value="Production" />
   </Parameters>
 </Application>
