@@ -1,12 +1,12 @@
 ﻿<ul class="nav navbar-nav navbar-right">
 	@if ( User.Identity.IsAuthenticated )
 	{
-		<li><span class="glyphicon glyphicon-user" aria-hidden="true"></span> @User.Identity.Name</li>
-		<li><a asp-controller="User" asp-action="SignOut">Sign out</a></li>
+		<li><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; @User.Identity.Name</li>
+		<li><a asp-controller="User" asp-action="SignOut"><span class="glyphicon glyphicon-log-out" aria-hidden="true">&nbsp; Sign out</a></li>
 	}
 	else
 	{
-		<li><a asp-controller="User" asp-action="Login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login</a></li>
-		<li><a asp-controller="User" asp-action="Register">Register</a></li>
+		<li><a asp-controller="User" asp-action="Login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp; Login</a></li>
+		<li><a asp-controller="User" asp-action="Register"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; Register</a></li>
 	}
 </ul>

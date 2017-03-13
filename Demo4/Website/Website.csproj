@@ -25,6 +25,7 @@
     <ProjectReference Include="..\UserActor.Interfaces\UserActor.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
 
