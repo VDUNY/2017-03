@@ -1,12 +1,33 @@
-﻿<ul class="nav navbar-nav navbar-right">
+﻿@using System.Security.Claims
+@{
+	string givenName = string.Empty;
+	var surName = string.Empty;
+	var fullName = string.Empty;
+
+	if( User.Identity.IsAuthenticated )
+	{
+		givenName = User.Claims.Single( c => c.Type == ClaimTypes.GivenName ).Value;
+		surName = User.Claims.Single( c => c.Type == ClaimTypes.Surname ).Value;
+		fullName = String.Join( " ", givenName, surName );
+	}
+}
+<ul class="nav navbar-nav navbar-right">
 	@if ( User.Identity.IsAuthenticated )
 	{
-		<li><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; @User.Identity.Name</li>
-		<li><a asp-controller="User" asp-action="SignOut"><span class="glyphicon glyphicon-log-out" aria-hidden="true">&nbsp; Sign out</a></li>
+		<li><p class="navbar-text">
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; @fullName
+		</p></li>
+		<li><a asp-controller="User" asp-action="SignOut">
+			<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp; Sign out
+		</a></li>
 	}
 	else
 	{
-		<li><a asp-controller="User" asp-action="Login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp; Login</a></li>
-		<li><a asp-controller="User" asp-action="Register"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; Register</a></li>
+		<li><a asp-controller="User" asp-action="Login">
+			<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp; Login</a>
+		</li>
+		<li><a asp-controller="User" asp-action="Register">
+			<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; Register</a>
+		</li>
 	}
 </ul>

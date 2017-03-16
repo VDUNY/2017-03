@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
 using Microsoft.ServiceFabric.Actors;
 
 namespace UserActor.Interfaces
@@ -14,16 +11,42 @@ namespace UserActor.Interfaces
 	public interface IUserActor : IActor
 	{
 		/// <summary>
-		/// TODO: Replace with your own actor method.
+		/// Creates a new user instance.
 		/// </summary>
-		/// <returns></returns>
-		Task<int> GetCountAsync( CancellationToken cancellationToken );
+		/// <param name="firstName">The users first name.</param>
+		/// <param name="lastName">The users last name.</param>
+		/// <param name="password">The users password.</param>
+		/// <returns>
+		/// true if the user was created successfully; false otherwise.
+		/// </returns>
+		Task<bool> Create( string firstName, string lastName, string password );
 
 		/// <summary>
-		/// TODO: Replace with your own actor method.
+		/// Gets the user profile.
 		/// </summary>
-		/// <param name="count"></param>
-		/// <returns></returns>
-		Task SetCountAsync( int count, CancellationToken cancellationToken );
+		/// <returns>
+		/// The users profile data.
+		/// </returns>
+		Task<UserProfile> GetProfile();
+
+		/// <summary>
+		/// Validates that the password supplied by a user matches the password 'on file'.
+		/// </summary>
+		/// <param name="password">The password supplied by the user attempting to login.</param>
+		/// <returns>
+		/// true if the password is valid; false otherwise.
+		/// </returns>
+		Task<bool> ValidatePassword( string password );
+
+		/// <summary>
+		/// Changes the users password, provided that the <paramref name="oldPassword"/> value
+		/// matches the current password.
+		/// </summary>
+		/// <param name="oldPassword">The users current password.</param>
+		/// <param name="newPassword">The new password to use.</param>
+		/// <returns>
+		/// true if the password has been successfully changed; false otherwise.
+		/// </returns>
+		Task<bool> ChangePassword( string oldPassword, string newPassword );
 	}
 }
