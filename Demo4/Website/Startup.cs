@@ -49,7 +49,15 @@ namespace Website
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+			app.UseCookieAuthentication( new CookieAuthenticationOptions()
+			{
+				AuthenticationScheme = "Forms",
+				LoginPath = new Microsoft.AspNetCore.Http.PathString("/User/Login/"),
+				AutomaticAuthenticate = true,
+				AutomaticChallenge = true
+			});
+
+			app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
