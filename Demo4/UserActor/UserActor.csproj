@@ -91,6 +91,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EmailService.Interfaces\EmailService.Interfaces.csproj">
+      <Project>{f6d94a87-845a-475c-b41e-1564e9d1daa8}</Project>
+      <Name>EmailService.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UserActor.Interfaces\UserActor.Interfaces.csproj">
       <Project>{144E1584-F56A-4823-B9E3-486CDC3256E9}</Project>
       <Name>UserActor.Interfaces</Name>

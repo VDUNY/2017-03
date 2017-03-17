@@ -71,6 +71,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Email.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="Program.cs" />

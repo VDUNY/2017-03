@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace UserActor.Interfaces
 {
@@ -16,5 +17,20 @@ namespace UserActor.Interfaces
 
 		[DataMember]
 		public string LastName { get; set; }
+
+		private DateTime Created { get; set; }
+
+
+		public UserProfile()
+		{
+			Created = DateTime.UtcNow;
+		}
+
+		public UserProfile( string email, string firstName, string lastName ) : this()
+		{
+			Email = email;
+			FirstName = firstName;
+			LastName = lastName;
+		}
 	}
 }

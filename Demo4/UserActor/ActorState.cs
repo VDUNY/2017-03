@@ -10,17 +10,18 @@ namespace UserActor
 	[DataContract]
 	internal class ActorState
 	{
+		[DataMember]
+		public UserProfile Profile { get; set; }
+
+		// ENHANCEMENT: ensure that the password is protected (salted/hashed)
+		[DataMember]
+		public string Password { get; set; }
+
+
 		public ActorState( UserProfile profile, string password )
 		{
 			Profile = profile;
 			Password = password;
 		}
-
-		[DataMember]
-		public UserProfile Profile { get; set; }
-
-		// TODO: ensure that the password is protected (salted/hashed)
-		[DataMember]
-		public string Password { get; set; }
 	}
 }

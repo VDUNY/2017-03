@@ -81,6 +81,13 @@ namespace Website.Controllers
 
 		#region Helpers
 
+		/// <summary>
+		/// Calls the User Actor to validate the login information provided by the user.
+		/// </summary>
+		/// <param name="model">The users login information.</param>
+		/// <returns>
+		/// The users profile if the login data is correct; null otherwise.
+		/// </returns>
 		private async Task<UserProfile> ValidateUser( LoginViewModel model )
 		{
 			UserProfile result = null;
@@ -97,6 +104,10 @@ namespace Website.Controllers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates the authentication session cookie for the user.
+		/// </summary>
+		/// <param name="profile">User profile information to be put into the Auth cookie.</param>
 		private void BuildUserSesion( UserProfile profile )
 		{
 			var claims = new List<Claim>
@@ -116,6 +127,13 @@ namespace Website.Controllers
 			ServiceEventSource.Current.SuccessfulLogin( profile.Email );
 		}
 
+		/// <summary>
+		/// Creates the user by calling the Actor Service.
+		/// </summary>
+		/// <param name="model">User registration information.</param>
+		/// <returns>
+		/// true if the user was created successfully; false otherwise.
+		/// </returns>
 		private async Task<bool> CreateUser( RegistrationViewModel model )
 		{
 			var actorId = new ActorId( model.Email );

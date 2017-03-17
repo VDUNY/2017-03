@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.Actors.Client;
+using Microsoft.ServiceFabric.Services.Client;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
 
 using UserActor.Interfaces;
+using EmailService.Interfaces;
 
 namespace UserActor
 {
@@ -80,12 +80,14 @@ namespace UserActor
 				return false;
 			}
 
-			state.Profile.Email = Id.GetStringId();
-			state.Profile.FirstName = firstName;
-			state.Profile.LastName = lastName;
+			state.Profile = new UserProfile( Id.GetStringId(), firstName, lastName );
 			state.Password = password;
 
 			await SetActorStateAsync( state );
+
+			ActorEventSource.Current.ActorMessage( this, "User '{0}' successfully created", Id.GetStringId() );
+
+			await SendWelcomeEmail( state.Profile );
 
 			return true;
 		}
@@ -131,12 +133,12 @@ namespace UserActor
 			var result = false;
 			var state = await GetActorStateAsync();
 
-			// TODO: password should be protected (salted/hashed)
+			// ENHANCEMENT: password should be protected (salted/hashed)
 			if ( state.Password.Equals( oldPassword ) )
 			{
-				// TODO: check password history?
+				// ENHANCEMENT: check password history?
 				state.Password = newPassword;
-				// TODO: add new password to history?
+				// ENHANCEMENT: add new password to history?
 				await SetActorStateAsync( state );
 				result = true;
 			}
@@ -148,15 +150,41 @@ namespace UserActor
 
 		#region Helpers
 
+		/// <summary>
+		/// Retrieves the actor state from the state manager.
+		/// </summary>
+		/// <returns></returns>
 		private async Task<ActorState> GetActorStateAsync()
 		{
 			var stateValue = await StateManager.TryGetStateAsync<ActorState>( STATE_KEY );
 			return await Task.FromResult( stateValue.Value );
 		}
 
+		/// <summary>
+		/// Saves the actor state in the state manager.
+		/// </summary>
+		/// <param name="state">The state to save.</param>
+		/// <returns></returns>
 		private async Task SetActorStateAsync( ActorState state )
 		{
 			await StateManager.AddOrUpdateStateAsync( STATE_KEY, state, ( ke, v ) => state );
+		}
+
+		/// <summary>
+		/// Sends a welcome message to the user through the email service.
+		/// </summary>
+		/// <param name="profile">User profile data to include in the email.</param>
+		/// <returns></returns>
+		private async Task SendWelcomeEmail( UserProfile profile )
+		{
+			var emailProxy = ServiceProxy.Create<IEmailService>( new Uri( "fabric:/Demo4/EmailService" ), new ServicePartitionKey(1) );
+			await emailProxy.SendEmail(
+					"noreply@example.com",
+					"Welcome to Service Fabric!",
+					"Hello!",
+					new List<string>{ Id.GetStringId() } );
+
+			ActorEventSource.Current.ActorMessage( this, "Welcome email sent to '{0}'", Id.GetStringId() );
 		}
 
 		#endregion

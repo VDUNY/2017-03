@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+
+using EmailService.Interfaces;
 
 namespace EmailService
 {
 	/// <summary>
 	/// An instance of this class is created for each service replica by the Service Fabric runtime.
 	/// </summary>
-	internal sealed class EmailService : StatefulService
+	internal sealed class EmailService : StatefulService, IEmailService
 	{
-		public EmailService( StatefulServiceContext context )
-			: base( context )
-		{ }
+		private readonly string QueueName = "Email";
+
+		public EmailService( StatefulServiceContext context ) : base( context )
+		{
+		}
 
 		/// <summary>
 		/// Optional override to create listeners (e.g., HTTP, Service Remoting, WCF, etc.) for this service replica to handle client or user requests.
@@ -28,7 +33,11 @@ namespace EmailService
 		/// <returns>A collection of listeners.</returns>
 		protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
 		{
-			return new ServiceReplicaListener[0];
+			return new[]
+			{
+				// add a basic RPC listener
+				new ServiceReplicaListener( context => this.CreateServiceRemotingListener(context))
+			};
 		}
 
 		/// <summary>
@@ -38,31 +47,87 @@ namespace EmailService
 		/// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
 		protected override async Task RunAsync( CancellationToken cancellationToken )
 		{
-			// TODO: Replace the following sample code with your own logic 
-			//       or remove this RunAsync override if it's not needed in your service.
-
-			var myDictionary = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, long>>( "myDictionary" );
+			var queue = await GetQueueAsync();
 
 			while ( true )
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
-				using ( var tx = this.StateManager.CreateTransaction() )
+				using ( var tx = StateManager.CreateTransaction() )
 				{
-					var result = await myDictionary.TryGetValueAsync( tx, "Counter" );
+					try
+					{
+						// get the first item in the queue
+						var result = await queue.TryDequeueAsync( tx );
+						if ( result.HasValue )
+						{
+							var email = result.Value;
 
-					ServiceEventSource.Current.ServiceMessage( this.Context, "Current Counter Value: {0}",
-						result.HasValue ? result.Value.ToString() : "Value does not exist." );
+							// ENHANCEMENT: Send the mail message through a service provider
 
-					await myDictionary.AddOrUpdateAsync( tx, "Counter", 0, ( key, value ) => ++value );
+							ServiceEventSource.Current.ServiceMessage(
+									Context, "Message sent with subject {0}", email.Subject );
 
-					// If an exception is thrown before calling CommitAsync, the transaction aborts, all changes are 
-					// discarded, and nothing is saved to the secondary replicas.
+							// If an exception is thrown before calling CommitAsync, the
+							// transaction aborts, all changes are discarded, and nothing
+							// is saved to the secondary replicas.
+							await tx.CommitAsync();
+						}
+					}
+					catch ( Exception e )
+					{
+						ServiceEventSource.Current.ServiceMessage( Context, "Error during Dequeue: {0}", e.Message );
+						throw;
+					}
+				}
+
+				await Task.Delay( TimeSpan.FromSeconds( 5 ), cancellationToken );
+			}
+		}
+
+		#region IEmailService implementation
+
+		public async Task<bool> SendEmail( string fromAddress, string subject, string body, IEnumerable<string> toAddresses )
+		{
+			var result = false;
+
+			try
+			{
+				var email = new Email( fromAddress, subject, body, toAddresses );
+
+				// add the message to the queue to be processed out-of-band by RunAsync()
+				var queue = await GetQueueAsync();
+				using ( var tx = StateManager.CreateTransaction() )
+				{
+					await queue.EnqueueAsync( tx, email );
 					await tx.CommitAsync();
 				}
 
-				await Task.Delay( TimeSpan.FromSeconds( 1 ), cancellationToken );
+				ServiceEventSource.Current.ServiceMessage( Context, "New mail message queued (Subject = {0})", subject );
+
+				result = true;
 			}
+			catch ( Exception e )
+			{
+				ServiceEventSource.Current.ServiceMessage( Context, "Error enqueing mail message. Error: {0}", e.Message );
+			}
+
+			return result;
 		}
+
+		#endregion
+
+		#region Helpers
+
+		/// <summary>
+		/// Gets the email queue instaqnce from the state manager.
+		/// </summary>
+		/// <returns></returns>
+		private async Task<IReliableQueue<Email>> GetQueueAsync()
+		{
+			return await StateManager.GetOrAddAsync<IReliableQueue<Email>>( QueueName );
+		}
+
+		#endregion
 	}
 }
