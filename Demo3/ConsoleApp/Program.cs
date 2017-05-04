@@ -28,9 +28,8 @@ namespace ConsoleApp
 					// why create a new instance every time we loop?  :)
 					var actor = ActorProxy.Create<IDemoActor>( actorId, "fabric:/Demo3" );
 					actor.SetCountAsync( input, cancellationToken ).GetAwaiter().GetResult();
+					Console.WriteLine( "Current Counter value: {0}\n", actor.GetCountAsync( cancellationToken ).GetAwaiter().GetResult() );
 				}
-
-				Console.WriteLine( "Current Counter value: {0}\n", actor.GetCountAsync( cancellationToken ).GetAwaiter().GetResult() );
 			}
 
 			Console.ReadKey();
